@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+env/
+.env
+.env.*
+*.egg-info/
+dist/
+build/
+pip-wheel-metadata/
+pip-log.txt
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Coverage
+.coverage
+htmlcov/
+coverage.xml
+
+# Misc
+.cache/
+*.tmp

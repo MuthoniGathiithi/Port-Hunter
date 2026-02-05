@@ -1,0 +1,19 @@
+# Node / Vite
+node_modules/
+dist/
+*.log
+.eslintcache
+
+# Env
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Misc
+.cache/
+*.tmp
