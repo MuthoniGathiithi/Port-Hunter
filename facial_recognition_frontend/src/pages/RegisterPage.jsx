@@ -12,6 +12,8 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -39,8 +41,42 @@ export default function RegisterPage() {
         <h2 className="text-2xl font-bold mb-4">Lecturer Registration</h2>
         <input className="input-field mb-3" type="text" placeholder="Full Name" value={fullName} onChange={e => setFullName(e.target.value)} required />
         <input className="input-field mb-3" type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
-        <input className="input-field mb-3" type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
-        <input className="input-field mb-3" type="password" placeholder="Confirm Password" value={confirm} onChange={e => setConfirm(e.target.value)} required />
+        <div className="relative mb-3">
+          <input
+            className="input-field pr-10"
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
+            onClick={() => setShowPassword((v) => !v)}
+            tabIndex={-1}
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
+        </div>
+        <div className="relative mb-3">
+          <input
+            className="input-field pr-10"
+            type={showConfirm ? "text" : "password"}
+            placeholder="Confirm Password"
+            value={confirm}
+            onChange={e => setConfirm(e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
+            onClick={() => setShowConfirm((v) => !v)}
+            tabIndex={-1}
+          >
+            {showConfirm ? "Hide" : "Show"}
+          </button>
+        </div>
         <button className="btn-primary w-full mb-2" type="submit">Register</button>
         <div className="text-center">
           <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
