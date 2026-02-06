@@ -53,7 +53,7 @@ export default function LandingPage() {
 
         {/* Hero content */}
         <div style={{ maxWidth: "900px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-          <h1 className="hero-title">Port Hunter Facial Recognition</h1>
+          <h1 className="hero-title">Identi Facial Recognition</h1>
           <p className="hero-subtitle">
             Automated attendance and registration using facial recognition and liveness detection.
           </p>
