@@ -1,6 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
-from app.utils.security import get_current_lecturer
 from app.database import supabase_client
 from app.services.matching import match_faces
 import uuid
@@ -27,8 +26,8 @@ class AttendanceSessionResponse(BaseModel):
     unit_name: str | None = None
 
 @router.post("/", response_model=AttendanceSessionResponse)
-def create_session(data: AttendanceCreateRequest, lecturer_id: str = Depends(get_current_lecturer)):
-    unit = supabase_client.table("units").select("id,unit_name").eq("id", data.unit_id).eq("lecturer_id", lecturer_id).execute().data
+def create_session(data: AttendanceCreateRequest):
+    unit = supabase_client.table("units").select("id,unit_name").eq("id", data.unit_id).execute().data
     if not unit:
         raise HTTPException(status_code=404, detail="Unit not found.")
     session_id = str(uuid.uuid4())
@@ -48,32 +47,20 @@ def create_session(data: AttendanceCreateRequest, lecturer_id: str = Depends(get
 @router.get("/sessions")
 def list_sessions(
     unit_id: str | None = Query(default=None),
-    lecturer_id: str = Depends(get_current_lecturer),
 ):
-    units = supabase_client.table("units").select("id,unit_name").eq("lecturer_id", lecturer_id).execute().data
-    if not units:
-        return []
-    unit_map = {u["id"]: u["unit_name"] for u in units}
-    unit_ids = list(unit_map.keys())
     if unit_id:
-        if unit_id not in unit_map:
-            raise HTTPException(status_code=404, detail="Unit not found.")
-        unit_ids = [unit_id]
-    sessions = supabase_client.table("attendance_sessions").select("*").in_("unit_id", unit_ids).execute().data
-    for s in sessions:
-        s["unit_name"] = unit_map.get(s["unit_id"])
-    return sessions
+        return supabase_client.table("attendance_sessions").select("*").eq("unit_id", unit_id).execute().data
+    return supabase_client.table("attendance_sessions").select("*").execute().data
 
 @router.get("/sessions/{id}", response_model=AttendanceSessionResponse)
-def get_session(id: str, lecturer_id: str = Depends(get_current_lecturer)):
+def get_session(id: str):
     session = supabase_client.table("attendance_sessions").select("*").eq("id", id).execute().data
     if not session:
         raise HTTPException(status_code=404, detail="Session not found.")
     session = session[0]
-    unit = supabase_client.table("units").select("unit_name,lecturer_id").eq("id", session["unit_id"]).execute().data
-    if not unit or unit[0]["lecturer_id"] != lecturer_id:
-        raise HTTPException(status_code=403, detail="Not allowed.")
-    return AttendanceSessionResponse(**session, unit_name=unit[0]["unit_name"])
+    unit = supabase_client.table("units").select("unit_name").eq("id", session["unit_id"]).execute().data
+    unit_name = unit[0]["unit_name"] if unit else None
+    return AttendanceSessionResponse(**session, unit_name=unit_name)
 
 @router.get("/sessions/{id}/status")
 def get_status(id: str):

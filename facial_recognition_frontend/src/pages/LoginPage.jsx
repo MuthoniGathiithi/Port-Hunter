@@ -135,7 +135,7 @@ export default function LoginPage() {
               <label style={styles.label}>Email address</label>
               <input
                 type="email"
-                name="email"
+            <form style={styles.formContainer} onSubmit={handleSubmit}>
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
@@ -174,14 +174,14 @@ export default function LoginPage() {
               onClick={handleSubmit}
               disabled={loading}
               style={{ ...styles.submitButton, ...(loading && styles.submitButtonDisabled) }}
-            >
-              {loading ? "Signing in..." : "Sign in"}
-            </button>
-          </div>
-          <p style={styles.footer}>
-            Don't have an account?{" "}
-            <Link to="/register" style={styles.signupLink}>
-              Sign up
+              <button
+                type="submit"
+                disabled={loading}
+                style={{ ...styles.submitButton, ...(loading && styles.submitButtonDisabled) }}
+              >
+                {loading ? "Signing in..." : "Sign in"}
+              </button>
+            </form>
             </Link>
           </p>
         </div>

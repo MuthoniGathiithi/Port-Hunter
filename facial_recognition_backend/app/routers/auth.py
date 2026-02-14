@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, EmailStr, constr
-from app.utils.security import hash_password, verify_password, create_access_token, get_current_lecturer
+from app.utils.security import hash_password, verify_password, create_access_token
 from app.config import settings
 from app.database import supabase_client
 from datetime import timedelta
@@ -63,7 +63,7 @@ def login(data: LoginRequest):
     return TokenResponse(access_token=token)
 
 @router.get("/me", response_model=UserResponse)
-def get_me(user_id: str = Depends(get_current_lecturer)):
+def get_me(user_id: str):
     user = supabase_client.table("lecturers").select("*").eq("id", user_id).execute().data
     if not user:
         raise HTTPException(status_code=404, detail="User not found.")
