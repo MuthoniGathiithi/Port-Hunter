@@ -7,13 +7,14 @@ from insightface.app import FaceAnalysis
 import cv2, io
 from contextlib import asynccontextmanager
 
+
 face_app = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global face_app
     print("Loading buffalo_l model...")
-    face_app = FaceAnalysis(name="buffalo_l", providers=["CPUExecutionProvider"])
+    face_app = FaceAnalysis(name="buffalo_s", providers=["CPUExecutionProvider"])
     face_app.prepare(ctx_id=0, det_size=(320, 320))
     print("Face service ready.")
     yield
